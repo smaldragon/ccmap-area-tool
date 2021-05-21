@@ -1,11 +1,13 @@
 import json
 import math
 import re
-from helpers import ACRONYMS
+import urllib.request
+from helpers import ACRONYMS,HAS_FLAG_TEMPLATE
 
 MERGE = True
 WORLD_AREA = math.pi * (13000*13000)
 MODE = "WIKI"
+DATA_URL = "https://githubraw.com/ccmap/data/master/land_claims.civmap.json"
 
 def polygon_area(vertices):
     psum = 0
@@ -23,8 +25,14 @@ def polygon_area(vertices):
 
     return abs(1/2*(psum - nsum))
 
-with open('land_claims.civmap.json') as f:
-    data = json.load(f)
+headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+req = urllib.request.Request(url=DATA_URL, headers=headers)
+
+with urllib.request.urlopen(req) as url:
+  data = json.loads(url.read().decode())
+
+#with open('land_claims.civmap.json') as f:
+#    data = json.load(f)
 
 areas = {}
 
@@ -75,6 +83,9 @@ if MODE == "WIKI":
             are = round(areas[key]/1000000,3)
             per = round ((areas[key]/WORLD_AREA)*100,3)
             print(key,are)
-            f.write("|-\n|{}\n|[[{}]]\n|{}\n|{}\n".format(i,key,are,per))
+            nation_txt = "[[{}]]".format(key)
+            if key in HAS_FLAG_TEMPLATE:
+              nation_txt = "{{{{flag|{}}}}}".format(key)
+            f.write("|-\n|{}\n|{}\n|{}\n|{}\n".format(i,nation_txt,are,per))
             i = i+1
         f.write("|}")
