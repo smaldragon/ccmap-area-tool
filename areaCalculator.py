@@ -111,7 +111,6 @@ def main(argv):
 
         ua = "AreaListCalculator/0.0.1 Smal"
         site = Site('civwiki.org',clients_useragent=ua)
-        site.login(USER,PASSWORD)
 
         category = site.categories['All country data templates']
         for page in category:
@@ -133,22 +132,23 @@ def main(argv):
             i = i+1
         new_table += "|}"
 
-        if MODE == "WIKI":
         # Upload the table to civwiki
-            if SANDBOX == False:
-                page = site.pages['List_of_nations_by_area']
-            else:
-                page = site.pages['List_of_nations_by_area/Sandbox']
-            text = page.text()
-            parsed = wtp.parse(text)
-            print(parsed.pformat())
-            for section in parsed.sections:
-                if section.title == "Nations by area":
-                    section.contents = new_table
-            page.edit(parsed.string,"Automated Table Update")
-        elif MODE == "OFFLINE":
+        if SANDBOX == False:
+            page = site.pages['List_of_nations_by_area']
+        else:
+            page = site.pages['List_of_nations_by_area/Sandbox']
+        text = page.text()
+        parsed = wtp.parse(text)
+        print(parsed.pformat())
+        for section in parsed.sections:
+            if section.title == "Nations by area":
+                section.contents = new_table
+        if MODE == "OFFLINE":
             with open('areas.txt','w') as f:
-                f.write(new_table)
+                f.write(parsed.string)
+        else:
+            site.login(USER,PASSWORD)
+            page.edit(parsed.string,"Automated Table Update")
 
 if __name__ == "__main__":
     main(sys.argv[1:])
