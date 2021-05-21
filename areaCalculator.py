@@ -8,13 +8,14 @@ from mwclient import Site
 from mwclient.errors import LoginError
 import wikitextparser as wtp
 
+from secret import USER,PASSWORD
+
 # ------------- Constant Variables ----------------
 MERGE = True
 WORLD_AREA = math.pi * (13000*13000)
 MODE = "WIKI"
 DATA_URL = "https://githubraw.com/ccmap/data/master/land_claims.civmap.json"
-USER = ""
-PASSWORD = ""
+SANDBOX = False
 # ------------------------------------------------
 
 def polygon_area(vertices):
@@ -97,24 +98,8 @@ if MODE == "WIKI":
     for page in category:
         flag_template_whitelist.append(page.name[len("Template:Country data")+1:])
 
-    # Generate the wiki table and write it to file
+    # Generate the wiki table
     new_table = ""
-    ''''with open('areas.txt','w') as f:
-        f.write("{| class=\"wikitable sortable\"\n|+\n!Rank\n!Nation\n!Area in km²\n!% of Map Area\n|-\n")
-        f.write("|-\n|{}\n|{}\n|{}\n|{}\n".format(0,"''[[CivClassic]]''",round(WORLD_AREA/1000000,3),100))
-
-        i = 1
-        for key in areas_sorted.keys():
-            are = round(areas[key]/1000000,3)
-            per = round ((areas[key]/WORLD_AREA)*100,3)
-            print(key,are)
-            nation_txt = "[[{}]]".format(key)
-            if key in flag_template_whitelist:
-              nation_txt = "{{{{flag|{}}}}}".format(key)
-            f.write("|-\n|{}\n|{}\n|{}\n|{}\n".format(i,nation_txt,are,per))
-            i = i+1
-        f.write("|}")
-    '''
     new_table += "{| class=\"wikitable sortable\"\n|+\n!Rank\n!Nation\n!Area in km²\n!% of Map Area\n|-\n"
     new_table += ("|-\n|{}\n|{}\n|{}\n|{}\n".format(0,"''[[CivClassic]]''",round(WORLD_AREA/1000000,3),100))
     i = 1
@@ -129,8 +114,11 @@ if MODE == "WIKI":
         i = i+1
     new_table += "|}"
 
-    # -------
-    page = site.pages['List_of_nations_by_area/Sandbox']
+    # Upload the table to civwiki
+    if SANDBOX == False:
+        page = site.pages['List_of_nations_by_area']
+    else:
+        page = site.pages['List_of_nations_by_area/Sandbox']
     text = page.text()
     parsed = wtp.parse(text)
     print(parsed.pformat())
