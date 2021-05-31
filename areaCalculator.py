@@ -3,7 +3,7 @@ import json
 import math
 import re
 import urllib.request
-from helpers import ACRONYMS
+from helpers import ACRONYMS, FLAG_REDIRECTS
 
 from mwclient import Site
 from mwclient.errors import LoginError
@@ -128,6 +128,9 @@ def main(argv):
             nation_txt = "[[{}]]".format(key)
             if key in flag_template_whitelist:
                 nation_txt = "{{{{flag|{}}}}}".format(key)
+            #elif key in FLAG_REDIRECTS:
+            #    weh = FLAG_REDIRECTS[key]
+            #    nation_txt = "{{{{flagicon|{}}}}}[[{}|{}]]".format(weh,weh,key)
             new_table += "|-\n|{}\n|{}\n|{}\n|{}\n".format(i,nation_txt,are,per)
             i = i+1
         new_table += "|}"
