@@ -4,9 +4,10 @@ Simple script to generate wiki and markdown tables containing the area of ccmap 
 ## Usage
 
 * Install `mwclient`and `wikitextparser`python packages
-
 * Create a file titled `secret.py`, in here create two variables titled `USER` and `PASSWORD`, put your login credentials there
-* Run `areaCalculator.py --wiki`
+* Run `areaCalculator.py --wiki` to update nations by area page
+* Run `realisticBiomes.py` to update realistic biomes template
+* Run `factoryMod.py` to update factory mod template
 
 ### Settings
 

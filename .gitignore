@@ -3,6 +3,8 @@ areas.txt
 areas.md
 secret.py
 biomes.txt
+factories.txt
+factories.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

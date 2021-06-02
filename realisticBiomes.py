@@ -35,7 +35,7 @@ with urllib.request.urlopen(req) as url:
 
 # Parse the config and generate the page, 1 biome group at a time
 for alias in data["biome_aliases"]:
-    page_txt += "== {} ==\n".format(clean_name(alias))
+    page_txt += "===={}====\n".format(clean_name(alias))
     first_biome = True
     biomes_list = ""
     
@@ -94,16 +94,11 @@ with open("biomes.txt","w") as f:
 
 ua = "RealisticBiomes/0.0.1 Smal"
 site = Site('civwiki.org',clients_useragent=ua)
-page = site.pages['RealisticBiomes']
+page = site.pages['Template:RealisticBiomesConfig (CivClassic 2.0)']
 text = page.text()
-parsed = wtp.parse(text)
-
-for section in parsed.sections:
-    print(section.title)
-    if section.title == " Growth Rates ":
-        section.contents = page_txt + "{{Template:CivClassics server mechanics}}"
+#text. += page_txt
 
 site.login(USER,PASSWORD)
 
-page.edit(parsed.string,"Automated Data Update")
-print(parsed.string)
+page.edit(page_txt,"Automated Data Update")
+print(page.text())
