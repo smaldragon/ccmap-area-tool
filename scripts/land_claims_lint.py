@@ -15,10 +15,10 @@ data = []
 ids = []
 names = []
 
-DISPLAY_WARNINGS = False
+DISPLAY_WARNINGS = True
 
 try:
-    with open('land_claims.civmap.json') as f:
+    with open('data/land_claims.civmap.json') as f:
         data = json.loads(f.read())
 except NameError:
     print ("ERROR: FAILED TO LOAD JSON")
@@ -67,12 +67,12 @@ if "features" in data:
         
         # ------- WARNINGS 
         if DISPLAY_WARNINGS:
-            if not "collection-id" in feat:
-                print("WARNING: LACKS collection-id")
-                print(feat)
-            if not "shortname" in feat:
-                print("WARNING: LACKS shortname")
-                print(feat)
+            if "collection-id" in feat:
+                print("WARNING: HAS UNECESSARY collection-id",feat["name"])
+            #if not "shortname" in feat:
+            #    print("WARNING: LACKS shortname", feat["name"])
+            if not "declutter" in feat:
+                print("WARNING: LACKS declutter", feat["name"])
 else:
     print("ERROR: Features Field not found")
 
