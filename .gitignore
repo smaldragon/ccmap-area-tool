@@ -5,6 +5,7 @@ secret.py
 biomes.txt
 factories.txt
 factories.md
+preview/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
