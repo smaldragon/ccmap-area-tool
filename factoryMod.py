@@ -9,6 +9,7 @@ import wikitextparser as wtp
 from time import sleep
 
 from secret import USER,PASSWORD
+from config import SERVER_NAME,FACTORY_URL
 
 def clean_name(n):
     return n.lower().replace("_"," ").title()
@@ -47,8 +48,6 @@ def parseMaterials(mat_list):
 
 def main(argv):
     # ------------- Constant Variables ----------------
-    DATA_URL = "https://raw.githubusercontent.com/CivClassic/AnsibleSetup/master/templates/public/plugins/FactoryMod/config.yml.j2"
-    server_name = "CivClassic 2.0"
     MODE = "NONE"
     # -------------------------------------------------
 
@@ -69,16 +68,16 @@ def main(argv):
 
     # Get the latest biomes yaml
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
-    req = urllib.request.Request(url=DATA_URL, headers=headers)
+    req = urllib.request.Request(url=FACTORY_URL, headers=headers)
 
     page_txt = ""
     #page_txt = "= Realistic Biomes Growth Rates =\n"
 
     # Download the config
+    print("downloading config..")
     data = []
     with urllib.request.urlopen(req) as url:
-        data = yaml.load(url.read().decode())
-        #print(data)
+        data = yaml.safe_load(url.read().decode())
 
     print("Config Downloaded, parsing data...")
 
@@ -271,7 +270,7 @@ def main(argv):
                     )
                 txt += "|}"
 
-            page_title = 'Template:FactoryModConfig {} ({})'.format(fac['name'],server_name)
+            page_title = 'Template:FactoryModConfig {} ({})'.format(fac['name'],SERVER_NAME)
             with open('preview/{}.txt'.format(page_title),'w') as f:
                 f.write(txt)
             

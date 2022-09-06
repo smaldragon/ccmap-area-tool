@@ -1,6 +1,13 @@
 # ccmap-area-tool
 Simple script to generate wiki and markdown tables containing the area of ccmap nation polygons, used for updating [a wiki page](https://civwiki.org/wiki/List_of_nations_by_area)
 
+## Config
+
+The file `config.py` contains several variables that are used by the script(s):
+
+* `SERVER_NAME` - Name of the server, used for the titles of the generated pages
+* `FACTORY_URL` - The url to the factorymod config `.yml`
+
 ## Usage
 
 * Install `mwclient`and `wikitextparser`python packages
