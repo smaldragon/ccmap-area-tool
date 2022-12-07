@@ -125,18 +125,29 @@ def main(argv):
                 r_out = "(Random Item)"
 
                 table = []
+                uniques = {}
                 # Parse the Loot Table Here
                 for output in rec['outputs']:
                     roll = {}
-                    poss = rec['outputs'][output]
+                    poss = rec['outputs'][output] 
 
                     roll['name'] = clean_name(output)
                     roll['chance'] = poss['chance']*100
                     roll['item'] = parseMaterials(rec['outputs'][output])
 
                     table.append(roll)
+                    unique_name = roll['item']
+                    if "spawn egg" in unique_name.lower():
+                        unique_name = "Spawn Egg"
+                    if "music disc" in unique_name.lower():
+                        unique_name = "Music Disc"
+
+                    if unique_name in uniques:
+                        uniques[unique_name].append(roll)
+                    else:
+                        uniques[unique_name] = [roll]
                 
-                n_factory['tables'][name] = table
+                n_factory['tables'][name] = uniques
 
             elif rec['type'] == 'UPGRADE':
                 r_in = parseMaterials(rec['input'])
@@ -262,12 +273,31 @@ def main(argv):
                 txt += "|+ class=\"nowrap\" |{}\n".format(table_key)
                 txt += "! Name !! Item !! Chance\n"
                 for item in fac['tables'][table_key]:
-                    txt += "|-\n"
-                    txt += "| {} || {} || align=\"right\"| {}\n".format(
-                        item['name'],
-                        item['item'],
-                        round(item['chance'],5)
-                    )
+                    items = fac['tables'][table_key][item]
+                    if len(items) == 1:
+                        txt += "|-\n"
+                        txt += "| {} || {} || align=\"right\"| {}\n".format(
+                            items[0]['name'],
+                            items[0]['item'],
+                            round(items[0]['chance'],5)
+                        )
+                    else:
+                        names = ""
+                        chance = 0
+                        for i in items:
+                            names += f"{i['name']} | "
+                            chance += i["chance"]
+                        txt += "|-\n"
+                        txt += "| {{Collapsible list |"
+                        txt += "title = {} |  {} ".format(
+                            item,
+                            names,
+                        )
+                        txt += "}} \n"
+                        txt += "| {} || align=\"right\"| {}\n".format(
+                            item,
+                            round(chance,5)
+                        )
                 txt += "|}"
 
             page_title = 'Template:FactoryModConfig {} ({})'.format(fac['name'],SERVER_NAME)
@@ -276,7 +306,7 @@ def main(argv):
             
             page = site.pages[page_title]
             if (page.text() != txt):
-                print("DIFF",page_title)
+                print("\033[41mDIFF\033[49m",page_title)
                 if MODE == "WIKI":
                     page.edit(txt,"Automated Data Update")
 
