@@ -304,14 +304,15 @@ def main(argv):
             with open('preview/{}.txt'.format(page_title),'w') as f:
                 f.write(txt)
             
-            page = site.pages[page_title]
-            if (page.text() != txt):
-                print("\033[41mDIFF\033[49m",page_title)
-                if MODE == "WIKI":
+            
+            if MODE == "WIKI":
+                page = site.pages[page_title]
+                
+                if (page.text() != txt):
+                    print("\033[41mDIFF\033[49m",page_title)
                     page.edit(txt,"Automated Data Update")
-
-            else:
-                print("SAME",page_title)
+                else:
+                    print("SAME",page_title)
 
             sleep(0.2) # To prevent rate limiting
 
