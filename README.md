@@ -8,7 +8,7 @@ The file `config.py` contains several variables that are used by the script(s):
 * `SERVER_NAME` - Name of the server, used for the titles of the generated pages
 * `FACTORY_URL` - The url to the factorymod config `.yml`
 
-The file `secret.py` has civwiki your login info:
+The file `secret.py` has your civwiki login info:
 
 * `USER`
 * `PASSWORD` 
