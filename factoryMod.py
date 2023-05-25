@@ -103,6 +103,9 @@ def main(argv):
             print("type",fac['type'])
         
         for recipe in fac['recipes']:
+            if not recipe in data['recipes']:
+                print(f"couldn't find recipe {recipe} in factory {fac['name']}")
+                continue
             rec = data['recipes'][recipe]
             name = rec['name']
             r_in = ""
